@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Colorful Apple Documents",
+  "version": "1.0",
+  "description": "Modifies styles on developer.apple.com",
+  "content_scripts": [
+    {
+      "matches": ["*://developer.apple.com/*"],
+      "css": ["styles.css"],
+      "js": ["main.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

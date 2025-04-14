@@ -1,0 +1,114 @@
+/* styles.css */
+
+/* Font Injection */
+@font-face {
+  font-family: 'SF Pro Rounded';
+  /* Use a relative path or ensure the font is accessible */
+  /* src: url('path/to/SF-Pro-Rounded-Bold.otf') format('opentype'); */
+  /* Using CDN link for now, consider local hosting for production */
+  src: url('https://github.com/sahibjotsaggu/San-Francisco-Pro-Fonts/raw/refs/heads/master/SF-Pro-Rounded-Bold.otf') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* Color Variables */
+:root {
+  /* Light Mode Colors */
+  --systemOrange-light: #ff9500;
+  --systemPurple-light: #cc54da;
+  --systemBlue-light: #0f7dfa;
+  --systemMint-light: #00c1d9;
+  --systemRed-light: #ec4425;
+  --systemGreen-light: #34c759;
+
+  /* Dark Mode Colors */
+  --systemOrange-dark: #ff9f0a;
+  --systemPurple-dark: #bf5af2;
+  --systemBlue-dark: #0a84ff;
+  --systemMint-dark: #27c7d6;
+  --systemRed-dark: #ff453a;
+  --systemGreen-dark: #30d158;
+
+  /* Default to Light Mode */
+  --systemOrange: var(--systemOrange-light);
+  --systemPurple: var(--systemPurple-light);
+  --systemBlue: var(--systemBlue-light);
+  --systemMint: var(--systemMint-light);
+  --systemRed: var(--systemRed-light);
+  --systemGreen: var(--systemGreen-light);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Switch to Dark Mode */
+    --systemOrange: var(--systemOrange-dark);
+    --systemPurple: var(--systemPurple-dark);
+    --systemBlue: var(--systemBlue-dark);
+    --systemMint: var(--systemMint-dark);
+    --systemRed: var(--systemRed-dark);
+    --systemGreen: var(--systemGreen-dark);
+  }
+}
+
+/* Base Style for Navigator Icons */
+.custom-navigator-icon {
+  border-radius: 4px;
+  width: 18px;
+  min-width: 18px;
+  height: 18px !important; /* Add !important */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 4px;
+  color: white !important; /* Ensure text is white */
+  box-sizing: border-box;
+  vertical-align: middle;
+  font-family: 'SF Pro Rounded', sans-serif;
+  font-weight: bold;
+  font-size: 12px;
+  /* Default background color */
+  background-color: var(--systemGreen);
+}
+
+/* Color Variants based on data attribute */
+.custom-navigator-icon[data-color-variant="purple"] {
+  background-color: var(--systemPurple);
+}
+.custom-navigator-icon[data-color-variant="blue"] {
+  background-color: var(--systemBlue);
+}
+.custom-navigator-icon[data-color-variant="mint"] {
+  background-color: var(--systemMint);
+}
+.custom-navigator-icon[data-color-variant="orange"] {
+  background-color: var(--systemOrange);
+}
+/* Add red color variant */
+.custom-navigator-icon[data-color-variant="red"] {
+  background-color: var(--systemRed);
+}
+/* Green is the default, but can be explicit */
+.custom-navigator-icon[data-color-variant="green"] {
+  background-color: var(--systemGreen);
+}
+
+/* Specific style for two-path icons (e.g., Tag) */
+.custom-navigator-icon-twopath {
+  border-radius: 4px;
+  width: 18px;
+  min-width: 18px;
+  height: 18px !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0; /* Adjust padding if needed, maybe 0 to let SVG fill */
+  box-sizing: border-box;
+  vertical-align: middle;
+  background-color: var(--systemGreen);
+  /* NOTE: Does NOT hide the SVG inside */
+}
+
+/* Hide original SVG within the modified element */
+.custom-navigator-icon svg {
+    display: none !important; /* Use important to ensure override */
+}
