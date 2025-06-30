@@ -1,6 +1,20 @@
 {
   "manifest_version": 3,
   "name": "Colorful Apple Documents",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png",
+    "256": "icons/icon256.png"
+  },
+  "action": {
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png",
+      "256": "icons/icon256.png"
+    }
+  },
   "version": "1.0",
   "description": "Modifies styles on developer.apple.com",
   "content_scripts": [
