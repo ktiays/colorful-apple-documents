@@ -1,0 +1,79 @@
+.code-listing {
+  border-radius: 15px !important;
+  border-width: 0 !important;
+}
+
+pre.source {
+  border-radius: 15px !important;
+  border-width: 0 !important;
+}
+
+h1.title {
+  font-weight: 700 !important;
+  font-family: var(--apple-display-font-stack) !important;
+}
+
+h1 > small {
+  font-weight: 600 !important;
+  font-family: var(--apple-display-font-stack) !important;
+}
+
+.source > code {
+  letter-spacing: -0.027em !important;
+}
+
+:root {
+  --code-block-style-elements-padding: 8px 14px !important;
+  --apple-display-font-stack: var(
+    --typography-html-font,
+    "SF Pro Display",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Helvetica Neue",
+    "Helvetica",
+    "Arial",
+    sans-serif
+  );
+  --apple-body-font-stack: var(
+    --typography-html-font,
+    "SF Pro Text",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Helvetica Neue",
+    "Helvetica",
+    "Arial",
+    sans-serif
+  );
+
+  --aside-border-width: 1px;
+  --aside-border-radius: 15px;
+}
+
+body {
+  font-family: var(--apple-body-font-stack) !important;
+  --color-fill-orange-secondary: #fff9f4 !important;
+  --color-aside-deprecated: var(--color-figure-orange) !important;
+}
+
+@media screen and (prefers-color-scheme: dark) {
+  body[data-color-scheme="auto"] {
+    --color-fill-gray-quaternary: #333336 !important;
+    --color-code-background: var(--color-fill-gray-quaternary) !important;
+    --color-fill-orange-secondary: #290d00 !important;
+  }
+}
+
+aside .label {
+  font-family: var(--apple-body-font-stack) !important;
+}
+
+aside.deprecated {
+  box-shadow: 0 0 1px 0 var(--color-aside-deprecated-border) inset,
+    0 0 1px 0 var(--color-aside-deprecated-border) !important;
+}
+
+.availability {
+  font-family: var(--apple-body-font-stack) !important;
+}

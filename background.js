@@ -14,4 +14,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       .catch((error) => sendResponse({ success: false, error: error.message }));
     return true; // Keep the message channel open for async response
   }
+  if (request.action === "injectOverrideStyles") {
+    (async () => {
+      await chrome.scripting.insertCSS({
+        target: { tabId: sender.tab.id },
+        files: ["override.css"],
+      });
+    })();
+  }
 });

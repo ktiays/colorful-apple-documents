@@ -118,6 +118,14 @@
       const svgClasses = Array.from(svgIcon.classList);
       const iconClasses = svgClasses.filter((cls) => cls.endsWith("-icon"));
       const isCollectionIcon = svgClasses.includes("collection-icon");
+      const isArticleIcon = svgClasses.includes("article-icon");
+
+      // Skip modification for article icons
+      if (isArticleIcon) {
+        element.dataset.customProcessed = "true";
+        return;
+      }
+
       const shouldDeleteFirstPath =
         (iconClasses.length === 1 && iconClasses[0] === "svg-icon") ||
         isCollectionIcon;
@@ -250,6 +258,7 @@
       (async () => {
         const renderer = await getRenderer();
         if (renderer) {
+          await injectOverrideStyles();
           initializeColorfulIcons();
         }
       })();
@@ -280,6 +289,10 @@
         }
       });
     });
+  }
+
+  async function injectOverrideStyles() {
+    await chrome.runtime.sendMessage({ action: "injectOverrideStyles" });
   }
 
   // --- Export for external use ---
