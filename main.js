@@ -3,10 +3,11 @@
 
   // --- Configuration ---
   const NAVIGATOR_ICON_SELECTOR = "div.TopicTypeIcon.navigator-icon"; // CSS selector for target icon elements
-  const PROCESSED_ATTR = "data-custom-processed"; // Attribute to mark elements that have been processed
   const BASE_STYLE_CLASS = "custom-navigator-icon"; // Base CSS class for custom styling
   const TWOPATH_STYLE_CLASS = "custom-navigator-icon-twopath"; // Specific class for two-path icons
   const COLOR_VARIANT_ATTR = "data-color-variant"; // Data attribute to store the determined color variant
+  const NAVIGATOR_WRAPPER_CLASS = "navigator-icon-wrapper"; // CSS class for navigator wrapper element
+  const DEPTH_SPACER_CLASS = "depth-spacer"; // CSS class for depth spacer element
 
   // --- Helper Functions ---
 
@@ -104,32 +105,63 @@
     // Find SVG: Locate the SVG icon within the element
     const svgIcon = element.querySelector("svg");
 
-    // Handle specific multi-path SVG case (e.g., Tag icon)
-    if (svgIcon) {
-      const paths = svgIcon.querySelectorAll("path");
-      if (paths.length >= 2) {
-        // Check if there are 2 or more paths
-        // Remove the first path (often the background shape)
-        paths[0].remove();
-        // Color all remaining paths white
-        for (let i = 1; i < paths.length; i++) {
-          paths[i].setAttribute("fill", "white");
+    // If no SVG icon found, assume no modification is needed
+    if (!svgIcon) {
+      element.dataset.customProcessed = "true";
+      return;
+    }
+
+    // Handle specific multi-path SVG case (e.g., operator symbols)
+    const paths = svgIcon.querySelectorAll("path");
+    if (paths.length >= 2) {
+      // Check SVG classes first to determine modification approach
+      const svgClasses = Array.from(svgIcon.classList);
+      const iconClasses = svgClasses.filter((cls) => cls.endsWith("-icon"));
+      const isCollectionIcon = svgClasses.includes("collection-icon");
+      const shouldDeleteFirstPath =
+        (iconClasses.length === 1 && iconClasses[0] === "svg-icon") ||
+        isCollectionIcon;
+
+      // For non-collection icons, check if there's a depth-spacer sibling with a button
+      // If button exists, skip modification as it's not an operator target
+      if (!isCollectionIcon) {
+        const navigatorWrapper = element.closest(`.${NAVIGATOR_WRAPPER_CLASS}`);
+        if (navigatorWrapper) {
+          const depthSpacer = navigatorWrapper.parentElement.querySelector(
+            `.${DEPTH_SPACER_CLASS}`
+          );
+          if (depthSpacer && depthSpacer.querySelector("button")) {
+            // Skip modification - this is not an operator target
+            element.dataset.customProcessed = "true";
+            return;
+          }
         }
-        // Apply the specific style class (green background, keeps SVG visible)
-        element.classList.add(TWOPATH_STYLE_CLASS);
-        element.dataset.customProcessed = "true"; // Mark as processed
-        return; // Skip further processing for this specific case
       }
+
+      // Proceed with operator symbol modification
+
+      if (shouldDeleteFirstPath) {
+        // Remove the first path (outer frame of operator symbol)
+        paths[0].remove();
+      }
+      // Color all remaining paths white
+      for (let i = shouldDeleteFirstPath ? 1 : 0; i < paths.length; i++) {
+        paths[i].setAttribute("fill", "white");
+      }
+      // Apply the specific style class (green background, keeps SVG visible)
+      element.classList.add(TWOPATH_STYLE_CLASS);
+      element.dataset.customProcessed = "true"; // Mark as processed
+      return;
     }
 
     // Handle SVGs without <text>: Mark as processed but don't style if SVG exists but has no text element (likely decorative)
-    if (svgIcon && !svgIcon.querySelector("text")) {
+    if (!svgIcon.querySelector("text")) {
       element.dataset.customProcessed = "true"; // Mark to avoid re-checking
       return;
     }
 
     // Extract Text: Get text from the SVG
-    const combinedText = svgIcon ? getTextFromSvg(svgIcon) : "";
+    const combinedText = getTextFromSvg(svgIcon);
 
     // Determine Color: Get the appropriate color variant
     const colorVariant = getColorVariant(combinedText);
@@ -165,19 +197,34 @@
           // Reset processed flag if attributes change, as it might need re-styling
           // Note: This might be overly aggressive depending on which attributes change.
           // Consider checking mutation.attributeName if specific attributes matter.
-          // delete mutation.target.dataset.customProcessed; // Optional: Uncomment if re-processing is needed on attribute change
+          // delete mutation.target.dataset.customProcessed;
           checkAndModifyElement(mutation.target);
         }
       }
     }
   }
 
-  // --- Initialization ---
+  /**
+   * Detects if the current page is compatible with the icon modification script.
+   * Checks for Apple Developer Documentation or Swift Documentation indicators.
+   * @returns {boolean} True if the page is compatible, false otherwise.
+   */
+  function isSwiftDocCompatible() {
+    // Check if current URL matches Apple documentation pattern
+    const urlPattern = /^https?:\/\/[^\/]*\.apple\.com\/documentation\//;
+    const currentUrl = window.location.href;
+
+    return urlPattern.test(currentUrl);
+  }
+
+  // --- Main Functionality ---
 
   /**
-   * Initializes the script by processing existing elements and setting up the MutationObserver.
+   * Main function that initializes the icon modification script.
+   * Processes existing elements and sets up the MutationObserver.
+   * @returns {Object|null} Returns an object with cleanup function if successful, null if not compatible.
    */
-  function initialize() {
+  function initializeColorfulIcons() {
     // Process all matching elements present on initial page load
     document
       .querySelectorAll(NAVIGATOR_ICON_SELECTOR)
@@ -193,10 +240,58 @@
     };
 
     observer.observe(document.body, config); // Start observing the body for changes
-
-    console.log("Colorful Apple Docs Icons script initialized.");
   }
 
-  // Run the initialization logic
-  initialize();
+  // --- Auto-initialization (when used as a standalone script) ---
+
+  // Only auto-initialize if this script is running directly (not being imported)
+  if (typeof module === "undefined" || !module.exports) {
+    if (!isSwiftDocCompatible()) {
+      (async () => {
+        const renderer = await getRenderer();
+        if (renderer) {
+          initializeColorfulIcons();
+        }
+      })();
+      return;
+    }
+    // Run the initialization logic
+    initializeColorfulIcons();
+  }
+
+  // --- Communication with Background Script ---
+
+  /**
+   * Gets the renderer variable from the page's window via background script
+   * @returns {Promise<any>} The renderer object or null if failed
+   */
+  async function getRenderer() {
+    return new Promise((resolve, reject) => {
+      chrome.runtime.sendMessage({ action: "getRenderer" }, (response) => {
+        if (chrome.runtime.lastError) {
+          reject(new Error(chrome.runtime.lastError.message));
+          return;
+        }
+
+        if (response.success) {
+          resolve(response.data);
+        } else {
+          reject(new Error(response.error || "Failed to get renderer"));
+        }
+      });
+    });
+  }
+
+  // --- Export for external use ---
+
+  // Make the main function available globally for external use
+  if (typeof window !== "undefined") {
+    window.initializeColorfulIcons = initializeColorfulIcons;
+    window.getRenderer = getRenderer;
+  }
+
+  // CommonJS export (for Node.js environments, though this script is primarily for browsers)
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = { initializeColorfulIcons, getRenderer };
+  }
 })(); // End of IIFE

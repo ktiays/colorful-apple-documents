@@ -15,11 +15,21 @@
       "256": "icons/icon256.png"
     }
   },
-  "version": "1.0",
-  "description": "Modifies styles on developer.apple.com",
+  "version": "1.1",
+  "description": "Modify the style of Swift docs",
+  "permissions": [
+    "scripting",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "content_scripts": [
     {
-      "matches": ["*://developer.apple.com/*"],
+      "matches": ["<all_urls>"],
       "css": ["styles.css"],
       "js": ["main.js"],
       "run_at": "document_idle"
