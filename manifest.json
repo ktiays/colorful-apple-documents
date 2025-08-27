@@ -15,15 +15,10 @@
       "256": "icons/icon256.png"
     }
   },
-  "version": "1.1",
+  "version": "1.2",
   "description": "Enhances Swift DocC documentation sites with color-coded tags and improved visual styling for better navigation and readability.",
-  "permissions": [
-    "scripting",
-    "activeTab"
-  ],
-  "host_permissions": [
-    "<all_urls>"
-  ],
+  "permissions": ["scripting", "activeTab"],
+  "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "background.js"
   },

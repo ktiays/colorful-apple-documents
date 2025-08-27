@@ -53,8 +53,12 @@ h1 > small {
 
 body {
   font-family: var(--apple-body-font-stack) !important;
+  letter-spacing: -0.022em !important;
+
   --color-fill-orange-secondary: #fff9f4 !important;
+  --color-fill-gray-tertiary: #424245 !important;
   --color-aside-deprecated: var(--color-figure-orange) !important;
+  --color-grid: var(--color-fill-gray-tertiary) !important;
 }
 
 @media screen and (prefers-color-scheme: dark) {
@@ -62,6 +66,9 @@ body {
     --color-fill-gray-quaternary: #333336 !important;
     --color-code-background: var(--color-fill-gray-quaternary) !important;
     --color-fill-orange-secondary: #290d00 !important;
+    --color-figure-gray-secondary: #86868b !important;
+    --color-figure-gray-tertiary: #6e6e73 !important;
+    --color-fill-blue: #0071e3 !important;
   }
 }
 
@@ -75,5 +82,61 @@ aside.deprecated {
 }
 
 .availability {
+  font-family: var(--apple-body-font-stack) !important;
+}
+
+.leaf-link {
+  font-family: var(--apple-body-font-stack) !important;
+}
+
+.filter__wrapper {
+  border-radius: 12px !important;
+}
+
+.quick-navigation-open {
+  border-radius: 12px !important;
+}
+
+.contenttable-title {
+  font-weight: 600 !important;
+  font-family: var(--apple-display-font-stack) !important;
+  letter-spacing: 0.009em !important;
+}
+
+code {
+  font-family: SF Mono, SFMono-Regular, ui-monospace, Menlo, monospace !important;
+}
+
+.title {
+  font-weight: 600 !important;
+}
+
+.nav-menu-settings {
+  font-family: var(--apple-body-font-stack) !important;
+  letter-spacing: -0.016em !important;
+}
+
+.color-scheme-toggle {
+  --toggle-border-radius-outer: 12px;
+  --toggle-border-radius-inner: 10px;
+}
+
+.color-scheme-toggle {
+  font-family: var(--apple-body-font-stack) !important;
+}
+
+.eyebrow {
+  font-family: var(--apple-display-font-stack) !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.011em;
+}
+
+h2 {
+  font-family: var(--apple-display-font-stack) !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.004em;
+}
+
+.declaration-source-link {
   font-family: var(--apple-body-font-stack) !important;
 }
