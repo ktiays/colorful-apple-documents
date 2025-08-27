@@ -307,4 +307,4 @@
   if (typeof module !== "undefined" && module.exports) {
     module.exports = { initializeColorfulIcons, getRenderer };
   }
-})(); // End of IIFE
+})();
